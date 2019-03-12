@@ -58,3 +58,30 @@ module View = {
       </div>,
   };
 };
+
+module Row = {
+  module Style = {
+    let default = Css.(style([flexDirection(`row)]));
+  };
+  let component = ReasonReact.statelessComponent("Row");
+  let make =
+      (
+        ~className="",
+        ~onScroll=?,
+        ~onPress=?,
+        ~onMouseEnter=?,
+        ~onMouseLeave=?,
+        children,
+      ) => {
+    ...component,
+    render: _self =>
+      <View
+        className={Css.merge([Style.default, className])}
+        ?onScroll
+        ?onPress
+        ?onMouseEnter
+        ?onMouseLeave>
+        ...children
+      </View>,
+  };
+};
