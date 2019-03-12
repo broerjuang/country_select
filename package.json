@@ -1,0 +1,22 @@
+{
+  "name": "country_select",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [
+    "react-select",
+    "country_select"
+  ],
+  "author": "broerjuang<juangwiantoro@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "reason-react": "^0.5.3"
+  },
+  "devDependencies": {
+    "bs-platform": "^4.0.18"
+  }
+}
