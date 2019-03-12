@@ -85,3 +85,59 @@ module Row = {
       </View>,
   };
 };
+
+module TouchableOpacity = {
+  type cursorType = [ | `enabled | `disabled];
+
+  type containerType = [ | `view | `row];
+
+  module Styles = {
+    open Css;
+
+    let createContainerStyle = (mode, activeOpacity, hoverOpacity) =>
+      switch (mode, activeOpacity, hoverOpacity) {
+      | (`disabled, _, _) => style([hover([cursor(`notAllowed)])])
+      | (`enabled, activeOpacityValue, hoverOpacityValue) =>
+        style([
+          active([
+            opacity(activeOpacityValue),
+            transition(~duration=0, "opacity"),
+          ]),
+          hover([
+            opacity(hoverOpacityValue),
+            transition(~duration=0, "opacity"),
+            cursor(`pointer),
+          ]),
+        ])
+      };
+  };
+
+  let component = ReasonReact.statelessComponent("TouchableOpacity");
+
+  let make =
+      (
+        ~className="",
+        ~onPress=?,
+        ~hoverOpacity=0.85,
+        ~activeOpacity=0.5,
+        ~mode=`enabled,
+        ~tabIndex=?,
+        ~containerType=`view,
+        children,
+      ) => {
+    ...component,
+    render: _self => {
+      let resolvedStyle =
+        Css.merge([
+          Styles.createContainerStyle(mode, activeOpacity, hoverOpacity),
+          className,
+        ]);
+
+      switch (containerType) {
+      | `view =>
+        <View className=resolvedStyle ?onPress ?tabIndex> ...children </View>
+      | `row => <Row className=resolvedStyle ?onPress> ...children </Row>
+      };
+    },
+  };
+};
