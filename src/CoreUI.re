@@ -156,7 +156,16 @@ module TouchableOpacity = {
 
 module Text = {
   module Styles = {
-    let default = Css.(style([fontSize(`px(14))]));
+    let default =
+      Css.(
+        style([
+          fontSize(`px(14)),
+          fontFamily("Arial"),
+          overflow(`hidden),
+          textOverflow(`ellipsis),
+          whiteSpace(`nowrap),
+        ])
+      );
   };
   let component = ReasonReact.statelessComponent("Text");
 

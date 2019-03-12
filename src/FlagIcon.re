@@ -254,7 +254,7 @@ type code = [
 
 let component = ReasonReact.statelessComponent("FlagIcon");
 
-let make = (~code: option(code)=?, _children) => {
+let make = (~code: option(code), _children) => {
   ...component,
   render: _self => {
     let country = code <$> codeToJs;
