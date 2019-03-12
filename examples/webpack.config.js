@@ -11,20 +11,24 @@ module.exports = {
     path: outputDir,
     filename: 'Index.js',
   },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       inject: false,
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-url-loader',
+      },
+    ],
+  },
   devServer: {
     compress: true,
     contentBase: outputDir,
