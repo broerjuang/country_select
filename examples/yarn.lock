@@ -501,11 +501,6 @@ browserify-zlib@^0.2.0:
   dependencies:
     pako "~1.0.5"
 
-bs-platform@^4.0.18:
-  version "4.0.18"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-4.0.18.tgz#d17b8693ba1f714d9b27e0ddb365f2069ba4b8a0"
-  integrity sha512-BwzW0iYHvREqUZIgQxJmdJrxexppLvJxYQ4LLexbhCp7uZU5DIZ5ub4ZHpkCkc8fn8bsXWc+Rrejb3csi+BoAQ==
-
 buffer-from@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
@@ -810,6 +805,11 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+
+"country_select@file:..":
+  version "0.1.0"
+  dependencies:
+    reason-react "^0.5.3"
 
 create-ecdh@^4.0.0:
   version "4.0.3"
@@ -3128,7 +3128,7 @@ readdirp@^2.2.1:
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
 
-reason-react@>=0.4.0:
+reason-react@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/reason-react/-/reason-react-0.5.3.tgz#10601809742fd991109ec9d69ad4baf2c3f17540"
   integrity sha512-dUkoqXrP/gOjkmkW+k/otEUP+yeXH5+QfdxNT5EW60MXM3zbCdFhbNzKBbjYOZ6x96UbxK869CObjX04BdJEDg==
