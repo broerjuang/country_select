@@ -23,6 +23,7 @@ module View = {
         minHeight(zero),
         minWidth(zero),
         userSelect(`none),
+        position(`relative),
       ]);
   };
 
@@ -33,6 +34,7 @@ module View = {
         ~className="",
         ~onScroll=?,
         ~onPress=?,
+        ~onKeyDown=?,
         ~onMouseEnter=?,
         ~onMouseLeave=?,
         ~onBlur=?,
@@ -66,6 +68,8 @@ module Row = {
   let component = ReasonReact.statelessComponent("Row");
   let make =
       (
+        ~tabIndex=?,
+        ~onKeyDown=?,
         ~className="",
         ~onScroll=?,
         ~onPress=?,
@@ -77,6 +81,8 @@ module Row = {
     render: _self =>
       <View
         className={Css.merge([Style.default, className])}
+        ?tabIndex
+        ?onKeyDown
         ?onScroll
         ?onPress
         ?onMouseEnter
@@ -118,6 +124,7 @@ module TouchableOpacity = {
       (
         ~className="",
         ~onPress=?,
+        ~onKeyDown=?,
         ~hoverOpacity=0.85,
         ~activeOpacity=0.5,
         ~mode=`enabled,
@@ -135,9 +142,30 @@ module TouchableOpacity = {
 
       switch (containerType) {
       | `view =>
-        <View className=resolvedStyle ?onPress ?tabIndex> ...children </View>
-      | `row => <Row className=resolvedStyle ?onPress> ...children </Row>
+        <View ?onKeyDown className=resolvedStyle ?onPress ?tabIndex>
+          ...children
+        </View>
+      | `row =>
+        <Row ?onKeyDown className=resolvedStyle ?onPress ?tabIndex>
+          ...children
+        </Row>
       };
+    },
+  };
+};
+
+module Text = {
+  module Styles = {
+    let default = Css.(style([fontSize(`px(14))]));
+  };
+  let component = ReasonReact.statelessComponent("Text");
+
+  let make = (~className="", ~value, _children) => {
+    ...component,
+    render: _self => {
+      <p className={Css.merge([Styles.default, className])}>
+        value->ReasonReact.string
+      </p>;
     },
   };
 };
