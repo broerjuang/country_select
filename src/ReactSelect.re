@@ -1,4 +1,4 @@
-module Select = {
+module Shared = {
   [@bs.deriving jsConverter]
   type commonProps = {
     label: string, // made up label and very opinioated with this apps
@@ -30,7 +30,10 @@ module Select = {
     [@bs.optional]
     menu: 'a => 'a,
   };
+};
 
+module Select = {
+  open Shared;
   [@bs.module "react-select"]
   external reactClass: ReasonReact.reactClass = "default";
 

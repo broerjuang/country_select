@@ -1,1 +1,1 @@
-ReactDOMRe.renderToElementWithId(<Components.CountrySelect />, "root");
+ReactDOMRe.renderToElementWithId(<CountrySelect />, "root");
