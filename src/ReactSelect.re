@@ -1,8 +1,9 @@
-open Utils.Option;
-
 module Select = {
-  [@bs.module "react-select"]
-  external reactClass: ReasonReact.reactClass = "default";
+  [@bs.deriving jsConverter]
+  type commonProps = {
+    label: string, // made up label and very opinioated with this apps
+    value: string,
+  };
 
   [@bs.deriving abstract]
   type components = {
@@ -29,6 +30,9 @@ module Select = {
     [@bs.optional]
     menu: 'a => 'a,
   };
+
+  [@bs.module "react-select"]
+  external reactClass: ReasonReact.reactClass = "default";
 
   [@bs.obj]
   external makeProps:

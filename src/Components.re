@@ -88,6 +88,37 @@ module Card = {
 
 module Dropdown = {};
 
+module Styles = {
+  let reactSelectStyle =
+    ReactSelect.Select.styles(
+      ~control=
+        styles => {
+          let overideStyle =
+            ReactDOMRe.Style.make(
+              ~display="flex",
+              ~flexDirection="row-reverse",
+              ~fontFamily="Arial",
+              ~boxShadow="none",
+              (),
+            );
+          ReactDOMRe.Style.combine(styles, overideStyle);
+        },
+      ~menu=
+        styles => {
+          open ReactDOMRe;
+          let overideStyle =
+            Style.make(
+              ~marginTop="0px",
+              ~borderTopRightRadius="0px",
+              ~borderTopLeftRadius="0px",
+              (),
+            );
+          Style.combine(styles, overideStyle);
+        },
+      (),
+    );
+};
+
 module CountrySelect = {
   type value = {
     .
@@ -122,13 +153,15 @@ module CountrySelect = {
     },
     render: ({state, send}) => {
       let renderOptions = props => {
+        open ReactSelect.Select;
+        let {label, value} = commonPropsFromJs(props);
         <ReactSelect.Components.Option props>
           <CoreUI.Row
             className=Css.(style([height(`px(30)), alignItems(`center)]))>
-            <FlagIcon code={FlagIcon.codeFromJs(props##value)} />
+            <FlagIcon code={FlagIcon.codeFromJs(value)} />
             <CoreUI.Text
               className=Css.(style([marginLeft(`px(10))]))
-              value=props##label
+              value=label
             />
           </CoreUI.Row>
         </ReactSelect.Components.Option>;
@@ -161,33 +194,7 @@ module CountrySelect = {
                  backspaceRemovesValue=false
                  options=Mock.data
                  placeholder="Search"
-                 styles={ReactSelect.Select.styles(
-                   ~control=
-                     styles => {
-                       let overideStyle =
-                         ReactDOMRe.Style.make(
-                           ~display="flex",
-                           ~flexDirection="row-reverse",
-                           ~fontFamily="Arial",
-                           ~boxShadow="none",
-                           (),
-                         );
-                       ReactDOMRe.Style.combine(styles, overideStyle);
-                     },
-                   ~menu=
-                     styles => {
-                       open ReactDOMRe;
-                       let overideStyle =
-                         Style.make(
-                           ~marginTop="0px",
-                           ~borderTopRightRadius="0px",
-                           ~borderTopLeftRadius="0px",
-                           (),
-                         );
-                       Style.combine(styles, overideStyle);
-                     },
-                   (),
-                 )}
+                 styles=Styles.reactSelectStyle
                  components={ReactSelect.Select.components(
                    ~options=renderOptions,
                    ~dropdownIndicator=renderSearchIcon,
