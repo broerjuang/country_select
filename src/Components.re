@@ -134,6 +134,12 @@ module CountrySelect = {
         </ReactSelect.Components.Option>;
       };
 
+      let renderSearchIcon = props => {
+        <ReactSelect.Components.DropdownIndicator props>
+          <Icon.Search />
+        </ReactSelect.Components.DropdownIndicator>;
+      };
+
       <CoreUI.View>
         <Trigger
           onPress={_ => send(ToggleDropdown)}
@@ -155,36 +161,39 @@ module CountrySelect = {
                  backspaceRemovesValue=false
                  options=Mock.data
                  placeholder="Search"
-                 styles={
-                   "control": props =>
-                     Js.Obj.assign(
-                       props,
-                       {
-                         "display": "flex",
-                         "flexDirection": "row-reverse",
-                         "borderRadius": "0",
-                         "fontFamily": "Arial",
-                         "boxShadow": "none",
-                       },
-                     ),
-                   "menu": props =>
-                     Js.Obj.assign(
-                       props,
-                       {
-                         "marginTop": "0",
-                         "borderTopRightRadius": "0",
-                         "borderTopLeftRadius": "0",
-                       },
-                     ),
-                 }
-                 components={
-                   "Option": renderOptions,
-                   "DropdownIndicator": props =>
-                     <ReactSelect.Components.DropdownIndicator props>
-                       <Icon.Search />
-                     </ReactSelect.Components.DropdownIndicator>,
-                   "IndicatorSeparator": Js.null,
-                 }
+                 styles={ReactSelect.Select.styles(
+                   ~control=
+                     styles => {
+                       let overideStyle =
+                         ReactDOMRe.Style.make(
+                           ~display="flex",
+                           ~flexDirection="row-reverse",
+                           ~fontFamily="Arial",
+                           ~boxShadow="none",
+                           (),
+                         );
+                       ReactDOMRe.Style.combine(styles, overideStyle);
+                     },
+                   ~menu=
+                     styles => {
+                       open ReactDOMRe;
+                       let overideStyle =
+                         Style.make(
+                           ~marginTop="0px",
+                           ~borderTopRightRadius="0px",
+                           ~borderTopLeftRadius="0px",
+                           (),
+                         );
+                       Style.combine(styles, overideStyle);
+                     },
+                   (),
+                 )}
+                 components={ReactSelect.Select.components(
+                   ~options=renderOptions,
+                   ~dropdownIndicator=renderSearchIcon,
+                   ~indicatorSeparator=_ => ReasonReact.null,
+                   (),
+                 )}
                />
              </Card>
              <Cover onClose={_ => send(ToggleDropdown)} />

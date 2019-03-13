@@ -1,17 +1,34 @@
+open Utils.Option;
+
 module Select = {
   [@bs.module "react-select"]
   external reactClass: ReasonReact.reactClass = "default";
 
-  // type component =
+  [@bs.deriving abstract]
+  type components = {
+    // Currently, I only care about this two field.
+    // I need to refactor this when I got clear idea what props is passing here
+    [@bs.optional] [@bs.as "Option"]
+    options:
+      {
+        .
+        "label": string,
+        "value": string,
+      } =>
+      ReasonReact.reactElement,
+    [@bs.optional] [@bs.as "DropdownIndicator"]
+    dropdownIndicator: Js.t({.}) => ReasonReact.reactElement,
+    [@bs.optional] [@bs.as "IndicatorSeparator"]
+    indicatorSeparator: Js.t({.}) => ReasonReact.reactElement,
+  };
 
-  // type components('a) = {. "Option": 'a => ReasonReact.reactElement};
-
-  // [@bs.deriving jsConverter]
-  // type style = {
-  //   clearIndicator: ReactDOMRe.style => ReactDOMRe.Style.t,
-  //   container: ReactDOMRe.style => ReactDOMRe.Style.t,
-  //   control: ReactDOMRe.style => ReactDOMRe.Style.t,
-  // };
+  [@bs.deriving abstract]
+  type styles('a) = {
+    [@bs.optional]
+    control: 'a => 'a,
+    [@bs.optional]
+    menu: 'a => 'a,
+  };
 
   [@bs.obj]
   external makeProps:
@@ -25,11 +42,11 @@ module Select = {
       ~options: array('a)=?,
       ~placeholder: string=?,
       ~tabSelectsValue: bool=?,
-      ~components: 'b=?,
+      ~components: components=?,
       ~backspaceRemovesValue: bool=?,
       ~maxMenuHeight: int=?,
       ~value: 'a=?,
-      ~styles: 'c=?,
+      ~styles: styles(ReactDOMRe.Style.t)=?,
       unit
     ) =>
     _ =
@@ -52,7 +69,7 @@ module Select = {
         ~maxMenuHeight=?,
         ~styles=?,
         children,
-      ) =>
+      ) => {
     ReasonReact.wrapJsForReason(
       ~reactClass,
       ~props=
@@ -75,6 +92,7 @@ module Select = {
         ),
       children,
     );
+  };
 };
 
 module Components = {
