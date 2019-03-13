@@ -1,4 +1,5 @@
 open Utils.Option;
+open CoreUI;
 
 module Trigger = {
   let component = ReasonReact.statelessComponent("Trigger");
@@ -6,37 +7,27 @@ module Trigger = {
   let make = (~isOpen, ~onKeyDown=?, ~selectedValue, ~onPress=?, _children) => {
     ...component,
     render: _self => {
-      let backgroundColor =
-        Css.(
-          isOpen ?
-            style([backgroundColor(`hex("E0EBFD"))]) :
-            style([backgroundColor(white)])
-        );
-
       let customStyle =
         Css.(
           style([
-            flexDirection(`row),
+            display(`flex),
+            textAlign(`center),
             borderColor(`rgba((0, 0, 0, 0.2))),
             justifyContent(`spaceBetween),
             paddingRight(`px(5)),
             paddingLeft(`px(10)),
             alignItems(`center),
             maxWidth(`px(150)),
-            height(`px(30)),
             borderRadius(`px(2)),
             borderWidth(`pxFloat(0.5)),
+            backgroundColor(isOpen ? `hex("E0EBFD") : white),
           ])
         );
       let textStyle = Css.(style([color(black), textOverflow(`ellipsis)]));
-      <CoreUI.TouchableOpacity
-        tabIndex=0
-        ?onKeyDown
-        ?onPress
-        className={Css.merge([backgroundColor, customStyle])}>
+      <button tabIndex=0 ?onKeyDown onClick=?onPress className=customStyle>
         <CoreUI.Text className=textStyle value=selectedValue />
         <Icon.ChevronDown />
-      </CoreUI.TouchableOpacity>;
+      </button>;
     },
   };
 };
@@ -58,7 +49,7 @@ module Cover = {
   let make = (~onClose, _children) => {
     ...component,
     render: _self => {
-      <CoreUI.View className=defaultStyle onPress=onClose />;
+      <View className=defaultStyle onPress=onClose />;
     },
   };
 };
@@ -81,42 +72,100 @@ module Card = {
   let make = children => {
     ...component,
     render: _self => {
-      <CoreUI.View className=defaultStyle> ...children </CoreUI.View>;
+      <View className=defaultStyle> ...children </View>;
     },
   };
 };
 
-module Dropdown = {};
+module Dropdown = {
+  module Styles = {
+    open ReactDOMRe.Style;
+    let reactSelectStyle =
+      ReactSelect.Select.styles(
+        ~control=
+          styles => {
+            let overideStyle =
+              make(
+                ~display="flex",
+                ~flexDirection="row-reverse",
+                ~fontFamily="Arial",
+                ~boxShadow="none",
+                (),
+              );
+            combine(styles, overideStyle);
+          },
+        ~menu=
+          styles => {
+            let overideStyle =
+              make(
+                ~marginTop="0px",
+                ~borderTopRightRadius="0px",
+                ~borderTopLeftRadius="0px",
+                (),
+              );
+            combine(styles, overideStyle);
+          },
+        (),
+      );
+  };
+  let component = ReasonReact.statelessComponent("Dropdown");
 
-module Styles = {
-  let reactSelectStyle =
-    ReactSelect.Select.styles(
-      ~control=
-        styles => {
-          let overideStyle =
-            ReactDOMRe.Style.make(
-              ~display="flex",
-              ~flexDirection="row-reverse",
-              ~fontFamily="Arial",
-              ~boxShadow="none",
-              (),
-            );
-          ReactDOMRe.Style.combine(styles, overideStyle);
-        },
-      ~menu=
-        styles => {
-          open ReactDOMRe;
-          let overideStyle =
-            Style.make(
-              ~marginTop="0px",
-              ~borderTopRightRadius="0px",
-              ~borderTopLeftRadius="0px",
-              (),
-            );
-          Style.combine(styles, overideStyle);
-        },
-      (),
-    );
+  let make = (~onChange, _children) => {
+    ...component,
+    render: _self => {
+      let renderOptions = props => {
+        open ReactSelect.Select;
+        let {label, value} = commonPropsFromJs(props);
+        <ReactSelect.Components.Option props>
+          <Row
+            className=Css.(style([height(`px(30)), alignItems(`center)]))>
+            <FlagIcon code={FlagIcon.codeFromJs(value)} />
+            <CoreUI.Text
+              className=Css.(style([marginLeft(`px(10))]))
+              value=label
+            />
+          </Row>
+        </ReactSelect.Components.Option>;
+      };
+
+      let renderSearchIcon = props => {
+        <ReactSelect.Components.DropdownIndicator props>
+          <Icon.Search />
+        </ReactSelect.Components.DropdownIndicator>;
+      };
+      <Card>
+        <ReactSelect.Select
+          autoFocus=true
+          onChange
+          hideSelectedOptions=false
+          menuIsOpen=true
+          controlShouldRenderValue=false
+          isClearable=false
+          backspaceRemovesValue=false
+          options=Mock.data
+          placeholder="Search"
+          styles=Styles.reactSelectStyle
+          components={ReactSelect.Select.components(
+            ~options=renderOptions,
+            ~dropdownIndicator=renderSearchIcon,
+            ~indicatorSeparator=_ => ReasonReact.null,
+            (),
+          )}
+        />
+      </Card>;
+    },
+  };
+};
+
+module ViewIf = {
+  let component = ReasonReact.statelessComponent("ViewIf");
+
+  let make = (~test, children) => {
+    ...component,
+    render: _self => {
+      test ? <View> ...children </View> : ReasonReact.null;
+    },
+  };
 };
 
 module CountrySelect = {
@@ -137,7 +186,7 @@ module CountrySelect = {
 
   let component = ReasonReact.reducerComponent("State");
 
-  let make = _chilren => {
+  let make = _children => {
     ...component,
     initialState: () => {isOpen: false, selectedValue: None},
     reducer: (action, state) => {
@@ -152,28 +201,7 @@ module CountrySelect = {
       };
     },
     render: ({state, send}) => {
-      let renderOptions = props => {
-        open ReactSelect.Select;
-        let {label, value} = commonPropsFromJs(props);
-        <ReactSelect.Components.Option props>
-          <CoreUI.Row
-            className=Css.(style([height(`px(30)), alignItems(`center)]))>
-            <FlagIcon code={FlagIcon.codeFromJs(value)} />
-            <CoreUI.Text
-              className=Css.(style([marginLeft(`px(10))]))
-              value=label
-            />
-          </CoreUI.Row>
-        </ReactSelect.Components.Option>;
-      };
-
-      let renderSearchIcon = props => {
-        <ReactSelect.Components.DropdownIndicator props>
-          <Icon.Search />
-        </ReactSelect.Components.DropdownIndicator>;
-      };
-
-      <CoreUI.View>
+      <View>
         <Trigger
           onPress={_ => send(ToggleDropdown)}
           isOpen={state.isOpen}
@@ -181,32 +209,11 @@ module CountrySelect = {
             state.selectedValue <$> (value => value##label) |? "Select Country"
           }
         />
-        {state.isOpen ?
-           <CoreUI.View>
-             <Card>
-               <ReactSelect.Select
-                 autoFocus=true
-                 onChange={value => send(SelectValue(value))}
-                 hideSelectedOptions=false
-                 menuIsOpen=true
-                 controlShouldRenderValue=false
-                 isClearable=false
-                 backspaceRemovesValue=false
-                 options=Mock.data
-                 placeholder="Search"
-                 styles=Styles.reactSelectStyle
-                 components={ReactSelect.Select.components(
-                   ~options=renderOptions,
-                   ~dropdownIndicator=renderSearchIcon,
-                   ~indicatorSeparator=_ => ReasonReact.null,
-                   (),
-                 )}
-               />
-             </Card>
-             <Cover onClose={_ => send(ToggleDropdown)} />
-           </CoreUI.View> :
-           ReasonReact.null}
-      </CoreUI.View>;
+        <ViewIf test={state.isOpen}>
+          <Dropdown onChange={value => send(SelectValue(value))} />
+          <Cover onClose={_ => send(ToggleDropdown)} />
+        </ViewIf>
+      </View>;
     },
   };
 };
