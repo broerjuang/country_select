@@ -17,6 +17,7 @@
     "bs-css": "^8.0.2",
     "flag-icon-css": "^3.3.0",
     "react-select": "^2.4.2",
+    "react-window": "^1.6.2",
     "reason-react": "^0.5.3"
   },
   "devDependencies": {

@@ -64,13 +64,6 @@ module Cover = {
 };
 
 module Card = {
-  /*
-   background: #FFFFFF;
-   border: 1px solid rgba(0, 0, 0, 0.08);
-   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-   border-radius: 2px;
-
-     */
   let defaultStyle =
     Css.(
       style([
