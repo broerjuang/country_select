@@ -1,0 +1,24 @@
+{
+  "name": "re-fetcher",
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": [
+    {
+      "module": "commonjs",
+      "in-source": true
+    }
+  ],
+  "suffix": ".bs.js",
+  "namespace": false,
+  "reason": {
+    "react-jsx": 2
+  },
+  "refmt": 3,
+  "bs-dependencies": [
+    "@ahrefs/bs-atdgen-codec-runtime",
+    "bs-fetch",
+    "reason-react"
+  ]
+}
