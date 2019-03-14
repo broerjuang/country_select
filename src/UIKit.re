@@ -1,4 +1,3 @@
-open Utils.Option;
 open CoreUI;
 
 module Trigger = {
@@ -89,6 +88,28 @@ module Card = {
   };
 };
 
+module Menu = {
+  let component = ReasonReact.statelessComponent("Menu");
+
+  let make = (~props, _children) => {
+    ...component,
+    render: _self => {
+      Js.log2("props", props);
+      <ReactSelect.Components.MenuList props>
+        <ReactWindow
+          height=props##maxHeight
+          itemCount={Array.length(props##children)}
+          itemSize=35
+          initialScrollOffset=(-35)>
+          ...{values =>
+            <div style=values##style> {props##children[values##index]} </div>
+          }
+        </ReactWindow>
+      </ReactSelect.Components.MenuList>;
+    },
+  };
+};
+
 module Dropdown = {
   module Styles = {
     open ReactDOMRe.Style;
@@ -122,19 +143,17 @@ module Dropdown = {
   };
   let component = ReasonReact.statelessComponent("Dropdown");
 
-  let make = (~onChange, _children) => {
+  let make = (~className=?, ~selectedValue=?, ~onChange, ~options, _children) => {
     ...component,
     render: _self => {
       let renderOptions = props => {
-        open ReactSelect.Shared;
-        let {label, value} = commonPropsFromJs(props);
         <ReactSelect.Components.Option props>
           <Row
             className=Css.(style([height(`px(30)), alignItems(`center)]))>
-            <FlagIcon code={FlagIcon.codeFromJs(value)} />
+            <FlagIcon code={FlagIcon.codeFromJs(props##value)} />
             <CoreUI.Text
               className=Css.(style([marginLeft(`px(10))]))
-              value=label
+              value=props##label
             />
           </Row>
         </ReactSelect.Components.Option>;
@@ -145,8 +164,11 @@ module Dropdown = {
           <Icon.Search />
         </ReactSelect.Components.DropdownIndicator>;
       };
+
       <Card>
         <ReactSelect.Select
+          ?className
+          value=selectedValue
           autoFocus=true
           onChange
           hideSelectedOptions=false
@@ -154,13 +176,15 @@ module Dropdown = {
           controlShouldRenderValue=false
           isClearable=false
           backspaceRemovesValue=false
-          options=Mock.data
+          closeMenuOnSelect=true
+          options
           placeholder="Search"
           styles=Styles.reactSelectStyle
           components={ReactSelect.Shared.components(
             ~options=renderOptions,
             ~dropdownIndicator=renderSearchIcon,
             ~indicatorSeparator=_ => ReasonReact.null,
+            ~menuList=props => <Menu props />,
             (),
           )}
         />

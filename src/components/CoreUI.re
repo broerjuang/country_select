@@ -40,7 +40,6 @@ module View = {
         ~onBlur=?,
         ~tabIndex=?,
         ~ref=?,
-        ~onKeyDown=?,
         children,
       ) => {
     ...component,
