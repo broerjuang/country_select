@@ -6,21 +6,17 @@ module Shared = {
   };
 
   [@bs.deriving abstract]
-  type components = {
+  type components('a) = {
     // Currently, I only care about this two field.
     // I need to refactor this when I got clear idea what props is passing here
     [@bs.optional] [@bs.as "Option"]
-    options:
-      {
-        .
-        "label": string,
-        "value": string,
-      } =>
-      ReasonReact.reactElement,
+    options: 'a => ReasonReact.reactElement,
     [@bs.optional] [@bs.as "DropdownIndicator"]
     dropdownIndicator: Js.t({.}) => ReasonReact.reactElement,
     [@bs.optional] [@bs.as "IndicatorSeparator"]
     indicatorSeparator: Js.t({.}) => ReasonReact.reactElement,
+    [@bs.optional] [@bs.as "MenuList"]
+    menuList: 'a => ReasonReact.reactElement,
   };
 
   [@bs.deriving abstract]
@@ -41,6 +37,8 @@ module Select = {
   external makeProps:
     (
       ~autoFocus: bool=?,
+      ~className: string=?,
+      ~closeMenuOnSelect: bool=?,
       ~controlShouldRenderValue: bool=?,
       ~hideSelectedOptions: bool=?,
       ~isClearable: bool=?,
@@ -49,10 +47,11 @@ module Select = {
       ~options: array('a)=?,
       ~placeholder: string=?,
       ~tabSelectsValue: bool=?,
-      ~components: components=?,
+      ~components: components('b)=?,
       ~backspaceRemovesValue: bool=?,
       ~maxMenuHeight: int=?,
-      ~value: 'a=?,
+      ~filterOption: bool=?,
+      ~value: option(string)=?,
       ~styles: styles(ReactDOMRe.Style.t)=?,
       unit
     ) =>
@@ -62,6 +61,8 @@ module Select = {
   let make =
       (
         ~autoFocus=?,
+        ~className=?,
+        ~closeMenuOnSelect=?,
         ~controlShouldRenderValue=?,
         ~hideSelectedOptions=?,
         ~isClearable=?,
@@ -72,6 +73,7 @@ module Select = {
         ~placeholder=?,
         ~tabSelectsValue=?,
         ~value=?,
+        ~filterOption=?,
         ~backspaceRemovesValue=?,
         ~maxMenuHeight=?,
         ~styles=?,
@@ -82,6 +84,8 @@ module Select = {
       ~props=
         makeProps(
           ~autoFocus?,
+          ~className?,
+          ~closeMenuOnSelect?,
           ~controlShouldRenderValue?,
           ~hideSelectedOptions?,
           ~isClearable?,
@@ -92,6 +96,7 @@ module Select = {
           ~tabSelectsValue?,
           ~components?,
           ~maxMenuHeight?,
+          ~filterOption?,
           ~styles?,
           ~backspaceRemovesValue?,
           ~value?,
@@ -115,6 +120,14 @@ module Components = {
   module DropdownIndicator = {
     [@bs.module "react-select"] [@bs.scope "components"]
     external reactClass: ReasonReact.reactClass = "DropdownIndicator";
+
+    let make = (~props, children) =>
+      ReasonReact.wrapJsForReason(~reactClass, ~props, children);
+  };
+
+  module MenuList = {
+    [@bs.module "react-select"] [@bs.scope "components"]
+    external reactClass: ReasonReact.reactClass = "MenuList";
 
     let make = (~props, children) =>
       ReasonReact.wrapJsForReason(~reactClass, ~props, children);
