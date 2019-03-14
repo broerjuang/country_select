@@ -2,34 +2,19 @@ open Utils.Option;
 open CoreUI;
 open UIKit;
 
-type value = {
-  .
-  "label": string,
-  "value": string,
-};
-
-type state = {
-  isOpen: bool,
-  selectedValue: option(value),
-};
+type state = {isOpen: bool};
 
 type action =
-  | ToggleDropdown
-  | SelectValue(value);
+  | ToggleDropdown;
 
 let component = ReasonReact.reducerComponent("State");
 
-let make = _children => {
+let make = (~className=?, ~onSelect, ~selectedValue, ~options, _children) => {
   ...component,
-  initialState: () => {isOpen: false, selectedValue: None},
+  initialState: () => {isOpen: false},
   reducer: (action, state) => {
     switch (action) {
-    | ToggleDropdown => ReasonReact.Update({...state, isOpen: !state.isOpen})
-    | SelectValue(selectedValue) =>
-      ReasonReact.Update({
-        selectedValue: Some(selectedValue),
-        isOpen: !state.isOpen,
-      })
+    | ToggleDropdown => ReasonReact.Update({isOpen: !state.isOpen})
     };
   },
   render: ({state, send}) => {
@@ -37,13 +22,19 @@ let make = _children => {
       <Trigger
         onPress={_ => send(ToggleDropdown)}
         isOpen={state.isOpen}
-        selectedValue={
-          state.selectedValue <$> (value => value##label) |? "Select Country"
-        }
+        selectedValue={selectedValue |? "Select Country"}
       />
       <ViewIf test={state.isOpen}>
-        <Dropdown onChange={value => send(SelectValue(value))} />
         <Cover onClose={_ => send(ToggleDropdown)} />
+        <Dropdown
+          ?className
+          ?selectedValue
+          onChange={value => {
+            onSelect(value##label);
+            send(ToggleDropdown);
+          }}
+          options
+        />
       </ViewIf>
     </View>;
   },
