@@ -20,7 +20,8 @@
   "dependencies": {
     "@ahrefs/bs-atdgen-codec-runtime": "^1.2.0",
     "bs-fetch": "^0.3.1",
-    "country_select": "0.1.0"
+    "country_select": "0.1.0",
+    "re-fetcher": "*"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",

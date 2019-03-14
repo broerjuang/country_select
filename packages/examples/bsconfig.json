@@ -16,10 +16,11 @@
   "suffix": ".bs.js",
   "namespace": true,
   "bs-dependencies": [
-    "reason-react",
-    "country_select",
     "@ahrefs/bs-atdgen-codec-runtime",
-    "bs-fetch"
+    "bs-fetch",
+    "country_select",
+    "re-fetcher",
+    "reason-react"
   ],
   "refmt": 3
 }
