@@ -1,24 +1,17 @@
 {
   "name": "country_select",
-  "version": "0.1.0",
-  "main": "index.js",
-  "scripts": {
-    "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world"
-  },
-  "keywords": [
-    "react-select",
-    "country_select"
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "author": "broerjuang<juangwiantoro@gmail.com>",
+  "repository": "https://github.com/broerjuang/country_select.git",
+  "author": "broerjuang <juangwiantoro@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bs-css": "^8.0.2",
-    "flag-icon-css": "^3.3.0",
-    "react-select": "^2.4.2",
-    "react-window": "^1.6.2",
-    "reason-react": "^0.5.3"
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "reason-react": "^0.6.0"
   },
   "devDependencies": {
     "bs-platform": "^4.0.18"
