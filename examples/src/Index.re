@@ -6,22 +6,30 @@ let from_list_option_to_array_of_option = xs => {
   |> Array.of_list;
 };
 
+module Fetch =
+  Fetcher.Make({
+    type t = Country_t.response;
+    let decoder_response = json =>
+      json |> Atdgen_codec_runtime.Decode.decode(Country_bs.read_response);
+  });
+
 ReactDOMRe.renderToElementWithId(
-  <App>
-    ...{({state, send}) =>
-      switch (state.status) {
+  <Fetch url="http://localhost:3000/country" method_=Get>
+    ...{state =>
+      switch (state) {
       | Idle => ReasonReact.null
-      | Error(message) => ReasonReact.string(message)
-      | Loaded(countries) =>
-        let formatedOptions = countries |> from_list_option_to_array_of_option;
+      | Loading => ReasonReact.string("loading")
+      | Loaded(d) =>
+        let formatedOptions = d.data |> from_list_option_to_array_of_option;
+        // Match the interface
         <CountrySelect
-          onSelect={value => send(SelectValue(value))}
-          selectedValue={state.selectedValue}
+          onSelect=Js.log
+          selectedValue=None
           options=formatedOptions
         />;
-      | Loading => ReasonReact.string("loading ..")
+      | Error(message) => ReasonReact.string(message)
       }
     }
-  </App>,
+  </Fetch>,
   "root",
 );
