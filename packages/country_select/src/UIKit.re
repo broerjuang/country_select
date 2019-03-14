@@ -142,7 +142,15 @@ module Dropdown = {
   };
   let component = ReasonReact.statelessComponent("Dropdown");
 
-  let make = (~className=?, ~selectedValue=?, ~onChange, ~options, _children) => {
+  let make =
+      (
+        ~className=?,
+        ~selectedValue=?,
+        ~withVirtualized=false,
+        ~onChange,
+        ~options,
+        _children,
+      ) => {
     ...component,
     render: _self => {
       let renderOptions = props => {
@@ -164,6 +172,26 @@ module Dropdown = {
         </ReactSelect.Components.DropdownIndicator>;
       };
 
+      let renderComponents =
+        withVirtualized ?
+          {
+            ReactSelect.Shared.components(
+              ~options=renderOptions,
+              ~dropdownIndicator=renderSearchIcon,
+              ~indicatorSeparator=_ => ReasonReact.null,
+              ~menuList=props => <Menu props />,
+              (),
+            );
+          } :
+          {
+            ReactSelect.Shared.components(
+              ~options=renderOptions,
+              ~dropdownIndicator=renderSearchIcon,
+              ~indicatorSeparator=_ => ReasonReact.null,
+              (),
+            );
+          };
+
       <Card>
         <ReactSelect.Select
           ?className
@@ -179,13 +207,7 @@ module Dropdown = {
           options
           placeholder="Search"
           styles=Styles.reactSelectStyle
-          components={ReactSelect.Shared.components(
-            ~options=renderOptions,
-            ~dropdownIndicator=renderSearchIcon,
-            ~indicatorSeparator=_ => ReasonReact.null,
-            ~menuList=props => <Menu props />,
-            (),
-          )}
+          components=renderComponents
         />
       </Card>;
     },

@@ -14,11 +14,12 @@ let component:
     ReasonReact.noRetainedProps,
     action,
   );
-  
+
 let make:
   (
     ~className: string=?,
     ~onSelect: Js.Dict.key => 'a,
+    ~withVirtualized: bool=?,
     ~selectedValue: option(string),
     ~options: array({
                 ..

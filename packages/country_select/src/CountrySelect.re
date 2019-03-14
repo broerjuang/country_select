@@ -17,6 +17,7 @@ let make =
     (
       ~className=?,
       ~onSelect,
+      ~withVirtualized=?,
       ~selectedValue: option(string),
       ~options,
       _children,
@@ -52,6 +53,7 @@ let make =
       <ViewIf test={state.isOpen}>
         <Cover onClose={_ => send(ToggleDropdown)} />
         <Dropdown
+          ?withVirtualized
           ?className
           selectedValue=?maybeValue
           onChange={option_ => {

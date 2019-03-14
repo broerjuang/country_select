@@ -22,11 +22,37 @@ ReactDOMRe.renderToElementWithId(
       | Loaded(d) =>
         let formatedOptions = d.data |> from_list_option_to_array_of_option;
         // Match the interface
-        <CountrySelect
-          onSelect=Js.log
-          selectedValue={Some("us")}
-          options=formatedOptions
-        />;
+        <Select>
+          ...{({onSelect, selectedValue}) =>
+            <div
+              style={ReactDOMRe.Style.make(
+                ~display="flex",
+                ~flexDirection="row",
+                ~justifyContent="space-evenly",
+                ~alignItems="center",
+                (),
+              )}>
+              <div>
+                <p> {ReasonReact.string("without virtualized")} </p>
+                <CountrySelect
+                  onSelect
+                  selectedValue
+                  options=formatedOptions
+                  withVirtualized=false
+                />
+              </div>
+              <div>
+                <p> {ReasonReact.string("with virtualized")} </p>
+                <CountrySelect
+                  onSelect
+                  selectedValue
+                  options=formatedOptions
+                  withVirtualized=true
+                />
+              </div>
+            </div>
+          }
+        </Select>;
       | Error(message) => ReasonReact.string(message)
       }
     }
