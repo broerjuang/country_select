@@ -24,7 +24,7 @@ ReactDOMRe.renderToElementWithId(
         // Match the interface
         <CountrySelect
           onSelect=Js.log
-          selectedValue=None
+          selectedValue={Some("us")}
           options=formatedOptions
         />;
       | Error(message) => ReasonReact.string(message)

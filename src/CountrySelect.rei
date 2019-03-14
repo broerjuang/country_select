@@ -1,6 +1,11 @@
-type state = {isOpen: bool};
+type state = {
+  isOpen: bool,
+  optionMap: Js.Dict.t(string),
+};
 type action =
-  | ToggleDropdown;
+  | ToggleDropdown
+  | MapOption;
+
 let component:
   ReasonReact.componentSpec(
     state,
@@ -9,13 +14,18 @@ let component:
     ReasonReact.noRetainedProps,
     action,
   );
+  
 let make:
   (
     ~className: string=?,
-    ~onSelect: 'a => 'b,
+    ~onSelect: Js.Dict.key => 'a,
     ~selectedValue: option(string),
-    ~options: array({.. "label": 'a}),
-    'c
+    ~options: array({
+                ..
+                "label": string,
+                "value": Js.Dict.key,
+              }),
+    'b
   ) =>
   ReasonReact.componentSpec(
     state,
